@@ -1,42 +1,158 @@
-# sv
+# Albania Waterfalls REST API
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+## Project Description
 
-## Creating a project
+This project provides a **REST API for waterfalls in Albania**.
+The API allows users to retrieve information about different waterfalls and manage the data through secure endpoints.
 
-If you're seeing this, you've probably already done this step. Congrats!
+The main goal of this project is to demonstrate the **development process of a REST API**, including:
 
-```sh
-# create a new project
-npx sv create my-app
+* proper API design
+* authentication
+* clean Git workflow
+* documentation and testing
+
+The API is built with **SvelteKit** and communicates using **JSON format**.
+
+---
+
+# Data Model
+
+Each waterfall entity contains the following attributes:
+
+| Field              | Description                                              |
+| ------------------ | -------------------------------------------------------- |
+| id                 | unique identifier                                        |
+| name               | name of the waterfall                                    |
+| location           | region or place in Albania                               |
+| type               | type of waterfall (e.g. natural, seasonal)               |
+| height             | height in meters                                         |
+| accessibility      | difficulty to reach the waterfall (easy / medium / hard) |
+| tourist_popularity | popularity for tourists (low / medium / high)            |
+
+Example JSON response:
+
+```json
+{
+  "id": 1,
+  "name": "Grunas Waterfall",
+  "location": "Theth",
+  "type": "natural",
+  "height": 25,
+  "accessibility": "medium",
+  "tourist_popularity": "high"
+}
 ```
 
-To recreate this project with the same configuration:
+---
 
-```sh
-# recreate this project
-npx sv@0.12.5 create --template minimal --no-types --add prettier eslint --install npm .
+# REST API Endpoints
+
+## Public Endpoints
+
+### Get all waterfalls
+
+```
+GET /api/waterfalls
 ```
 
-## Developing
+Returns a list of all waterfalls.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Response:
 
-```sh
-npm run dev
+* **200 OK**
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+---
+
+### Get waterfall by ID
+
+```
+GET /api/waterfalls/:id
 ```
 
-## Building
+Returns a single waterfall.
 
-To create a production version of your app:
+Response:
 
-```sh
-npm run build
+* **200 OK**
+* **404 Not Found**
+
+---
+
+# Protected Endpoints (Basic Auth)
+
+The following endpoints require **Basic Authentication**.
+
+### Create a new waterfall
+
+```
+POST /api/waterfalls
 ```
 
-You can preview the production build with `npm run preview`.
+Response:
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+* **201 Created**
+* **400 Bad Request**
+* **401 Unauthorized**
+
+---
+
+### Update a waterfall
+
+```
+PUT /api/waterfalls/:id
+```
+
+Response:
+
+* **200 OK**
+* **404 Not Found**
+* **401 Unauthorized**
+
+---
+
+### Delete a waterfall
+
+```
+DELETE /api/waterfalls/:id
+```
+
+Response:
+
+* **204 No Content**
+* **404 Not Found**
+* **401 Unauthorized**
+
+---
+
+# Authentication
+
+Write operations (**POST, PUT, DELETE**) are protected using **Basic Authentication**.
+
+If the authentication is missing or incorrect, the API returns:
+
+```
+401 Unauthorized
+```
+
+---
+
+# Technologies
+
+* SvelteKit
+* Node.js
+* MySQL
+* DataGrip
+* Postman
+* Git & GitHub
+
+---
+
+# Testing
+
+The API was tested using **Postman**.
+All endpoints are documented inside the **Postman Collection**.
+
+---
+
+
