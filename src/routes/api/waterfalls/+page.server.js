@@ -1,15 +1,16 @@
 import pool from '$lib/server/database.js';
+import { API_USER, API_PASS } from '$env/static/private';
+
 
 function checkAuth(request) {
-    const auth = request.headers.get('authorization');
+    const auth = request.headers.get('Authorization');
+    if (!auth?.startsWith('Basic ')) return false;
 
-    if (!auth || !auth.startsWith('Basic ')) {
-        return false;
-    }
+    const base64 = auth.slice(6);
+    const decoded = atob(base64);
+    const [user, pass] = decoded.split(':');
 
-    const [user, pass] = atob(auth.split(' ')[1]).split(':');
-
-    return user === 'admin' && pass === 'albania2024';
+    return user === API_USER && pass === API_PASS;
 }
 
 
@@ -28,7 +29,7 @@ export async function POST({ request }) {
 
     const { name, location, type, height, accessibility, tourist_popularity } = await request.json();
 
-    if (!name || !location || !type) {
+    if (!name || !location || !type || !height) {
         return Response.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
