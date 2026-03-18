@@ -21,9 +21,12 @@ function checkAuth(request) {
     return user === API_USER && pass === API_PASS;
 }
 
+// GET → return all waterfalls
 export async function GET() {
+    // Query database and get all waterfalls
     const [rows] = await pool.query('SELECT * FROM waterfalls');
 
+    // Return data as JSON with status 200 (OK)
     return Response.json(rows, { status: 200 });
 }
 
