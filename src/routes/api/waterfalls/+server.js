@@ -31,18 +31,23 @@ export async function GET() {
 }
 
 
+// POST → create new waterfall
 export async function POST({ request }) {
 
+    // Check authentication
     if (!checkAuth(request)) {
         return Response.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
+    // Read data from request body
     const { name, location, type, height, accessibility, tourist_popularity } = await request.json();
 
+    // Validate required fields
     if (!name || !location || !type || !height) {
         return Response.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
+    // Insert new waterfall into database
     const [result] = await pool.query(
         `INSERT INTO waterfalls 
         (name, location, type, height, accessibility, tourist_popularity)
@@ -50,6 +55,7 @@ export async function POST({ request }) {
         [name, location, type, height, accessibility, tourist_popularity]
     );
 
+    // Return success message with new ID
     return Response.json(
         { message: 'Waterfall created', id: result.insertId },
         { status: 201 }
